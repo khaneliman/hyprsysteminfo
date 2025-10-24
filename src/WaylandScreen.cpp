@@ -3,12 +3,13 @@
 #include <QtWaylandClient/private/qwayland-wayland.h>
 #include <QGuiApplication>
 #include <qpa/qplatformnativeinterface.h>
+#include <QtCore/qalgorithms.h>
 #include <cstdint>
+#include <cstring>
 #include <qcontainerfwd.h>
 #include <qsize.h>
 #include <qstringliteral.h>
 #include <qtclasshelpermacros.h>
-#include <qglobalstatic.h>
 #include <vector>
 #include <wayland-client.h>
 
@@ -77,7 +78,7 @@ std::vector<SWaylandScreenInfo> SWaylandScreenInfo::enumerateScreens() {
 }
 
 CWaylandScreen::CWaylandScreen(struct ::wl_registry* registry, uint32_t id, uint32_t version) 
-    : QtWayland::wl_output(registry, id, qMin(version, 4u)) {
+    : QtWayland::wl_output(registry, id, version < 4u ? version : 4u) {
 }
 
 CWaylandScreen::~CWaylandScreen() {
